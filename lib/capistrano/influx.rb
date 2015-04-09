@@ -27,6 +27,7 @@ module Capistrano
         project: app,
         version: branch,
         environment: stage,
+        title: "#{app} #{branch}",
         description: "#{deployer} deployed #{app} #{branch} to #{stage} successfully"
       }
       conn.write_point(name, data)
