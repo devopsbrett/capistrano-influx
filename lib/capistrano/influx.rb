@@ -8,7 +8,7 @@ module Capistrano
     def connection
       db = fetch(:influx_database)
       host = fetch(:influx_host, '127.0.0.1')
-      post = fetch(:influx_port, 8086)
+      port = fetch(:influx_port, 8086)
       user = fetch(:influx_user)
       pass = fetch(:influx_pass)
       @influxdb ||= InfluxDB::Client.new  db,
