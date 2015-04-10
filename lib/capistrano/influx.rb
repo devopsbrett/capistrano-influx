@@ -33,6 +33,13 @@ module Capistrano
       conn.write_point(name, data)
     end
 
+    def enabled_for_stage(stage, *enabled_stages)
+      enabled_stages.flatten.each do |s|
+        return true if s == :all || stage == s
+      end
+      false
+    end
+
     def self.extended(configuration)
       configuration.load do
         after 'deploy', 'influx:store_deploy'
@@ -41,9 +48,10 @@ module Capistrano
           ENV['SSHUSER'] || `git config user.name`.chomp
         end
 
+
         namespace :influx do
           task :store_deploy do
-            if fetch(:send_to_influx, false)
+            if enabled_for_stage fetch(:stage, 'production'), fetch(:influx_stages, '')
               influx_deploy(fetch(:application), fetch(:branch), fetch(:stage, 'production'), fetch(:deployer))
             end
           end
